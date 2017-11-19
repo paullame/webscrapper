@@ -1,0 +1,14 @@
+{
+  "name": "pathfinder-webcrawler",
+  "version": "0.0.0",
+  "description": "A simple webcrawler written in JavaScript",
+  "main": "crawler.js",
+  "author": "Paul Lame",
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "fs": "0.0.1-security",
+    "request": "^2.65.0",
+    "url-parse": "^1.0.5"
+  }
+}
