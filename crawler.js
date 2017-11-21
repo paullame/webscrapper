@@ -2,12 +2,12 @@ var request = require('request');
 var cheerio = require('cheerio');
 var fs = require('fs');
 
-var monJSON=[];
-var bestiaire1=[];
-var bestiaire2=[];
-var bestiaire3=[];
-var bestiaire4=[];
-var bestiaire5=[];
+var monJSON=[]; // array final des monstres
+var bestiaire1=[]; // liens des monstres du bestiaire 1
+var bestiaire2=[]; // liens des monstres du bestiaire 2
+var bestiaire3=[]; // liens des monstres du bestiaire 3
+var bestiaire4=[]; // liens des monstres du bestiaire 4
+var bestiaire5=[]; // liens des monstres du bestiaire 5
 
 crawl("http://paizo.com/pathfinderRPG/prd/bestiary/monsterIndex.html", bestiaire1);
 //crawl("http://paizo.com/pathfinderRPG/prd/bestiary2/additionalMonsterIndex.html", bestiaire2);
@@ -27,8 +27,9 @@ function crawl(pageToVisit, monArray) {
 	     console.log("Error: " + error);
 	   }
 	   // Check status code (200 is HTTP OK)
-	   console.log("Status code: " + response.statusCode);
-	   if(response.statusCode === 200) {
+	   if(!error && response.statusCode === 200) {
+	   	 console.log("Status code: " + response.statusCode);
+
 
 	     // on parse le corps de la page
 	     var $ = cheerio.load(body);
@@ -53,10 +54,9 @@ function crawl(pageToVisit, monArray) {
 
 		  });
 		console.log(monArray);
-		scrap(monArray);
+		scrap(monArray); //pour chaque liens on go récuperer les sorts
 	   }
-	   var bestiaireString = JSON.stringify(monJSON);
-		fs.writeFile("bestaire.json", bestiaireString);
+
 
 	});
 
@@ -77,6 +77,7 @@ function scrap(bestiaires) {
 		var link="http://paizo.com/"+bestiaires[i]; //cas normal
 		}
 
+		//besoin d'utiliser un wrapper pour le callback
 		request(link, callbackWrapper(bestiaires[i]));
 		
 
@@ -97,10 +98,10 @@ function callbackWrapper(lien) {
 			     console.log("Error: " + error);
 			   }
 			   // Check status code (200 is HTTP OK)
-			   console.log("Status code: " + response.statusCode);
 
 
 			   if(!error && response.statusCode === 200) {
+			     console.log("Status code: " + response.statusCode);
 
 			   	 var splitter=lien.split("#")
 				 var soustype=splitter[splitter.length-1];
@@ -116,9 +117,8 @@ function callbackWrapper(lien) {
 			     var monstre={name:title, spells:[]};
 
 
-				 var relativeLinks = $("a[href*='coreRulebook/spells']"); //selectionner tous les liens contenant 'spells'
+				 // target tout les liens contenant coreRulebook/spells entre le lien h1 et le suivant
 				 var start=$(h1tag)
-
 				 start.nextUntil("h1").find("a[href*='coreRulebook/spells']").each(function() {
 
 				 	monstre.spells.push($(this).text().trim()); // on stock le liens dans un array
@@ -132,8 +132,10 @@ function callbackWrapper(lien) {
 
 			     }
 			     jsonFinal = monJSON.filter(function( monstre ) {
-				     return monstre.name !== "";
+				     return monstre.name !== ""; //on retire tous les key null
 				 });
+
+				 // on écrit le JSON
 				 var bestiaireString = JSON.stringify(jsonFinal);
 				 fs.writeFile("bestaire.json", bestiaireString);
 
