@@ -1,14 +1,26 @@
 {
-  "name": "pathfinder-webcrawler",
-  "version": "0.0.0",
-  "description": "A simple webcrawler written in JavaScript",
+  "name": "webcrawler",
+  "version": "1.0.0",
+  "description": "un scrapper web en node.js",
   "main": "crawler.js",
-  "author": "Paul Lame",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paullame/webscrapper.git"
+  },
+  "author": "paul lame",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paullame/webscrapper/issues"
+  },
+  "homepage": "https://github.com/paullame/webscrapper#readme",
   "dependencies": {
-    "cheerio": "^0.19.0",
+    "async": "^2.6.0",
+    "cheerio": "^1.0.0-rc.2",
     "fs": "0.0.1-security",
-    "request": "^2.65.0",
-    "url-parse": "^1.0.5"
+    "request": "^2.83.0",
+    "sleep": "^5.1.1"
   }
 }
